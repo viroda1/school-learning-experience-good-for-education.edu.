@@ -556,13 +556,15 @@
 <script>
   // ========================
   // VIROS PROX LOADER
-  // Fetches from GitHub .txt file
+  // Fetches from the new listofproxys file
   // ========================
-  const LINKS_URL = "https://raw.githubusercontent.com/epickfr/proxlinksandsuch/refs/heads/main/Version1.0";
+  const LINKS_URL = "https://raw.githubusercontent.com/viroda1/school-learning-experience-good-for-education.edu./refs/heads/main/listofproxys";
   let links = [];
   let activeCategory = "All";
   let searchQuery = "";
-  const CATEGORY_ORDER = ["Proxies", "Games"];
+  let allCategories = new Set();
+  
+  // Icon mapping for different categories
   const CATEGORY_ICONS = {
     Proxies: "fa-globe",
     Games: "fa-gamepad",
@@ -570,21 +572,46 @@
     Other: "fa-link"
   };
 
-  // Fetch links from .txt
+  // Fetch and parse links from the text file
   async function fetchLinks() {
     try {
       const res = await fetch(LINKS_URL + "?v=" + Date.now());
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
-      links = text.split("\n")
-        .map(l => l.trim())
-        .filter(l => l && !l.startsWith("#"))
-        .map(l => {
-          const parts = l.split("|").map(s => s.trim());
-          return parts.length >= 3 ? { label: parts[0], url: parts[1], category: parts[2] } : null;
-        })
-        .filter(Boolean);
+      
+      const lines = text.split("\n");
+      const parsedLinks = [];
+      
+      for (let line of lines) {
+        line = line.trim();
+        
+        // Skip empty lines, comments, and decorative headers
+        if (!line || line.startsWith("#") || line.startsWith("──") || line.startsWith("//")) {
+          continue;
+        }
+        
+        // Parse format: Title | URL | Category
+        const parts = line.split("|").map(s => s.trim());
+        
+        // Need at least 3 parts for a valid entry
+        if (parts.length >= 3) {
+          const label = parts[0];
+          const url = parts[1];
+          let category = parts[2];
+          
+          // Clean up category (remove any trailing decorative chars)
+          category = category.replace(/^─+$/, '').trim();
+          if (category) {
+            parsedLinks.push({ label, url, category });
+            allCategories.add(category);
+          }
+        }
+      }
+      
+      links = parsedLinks;
+      console.log(`Loaded ${links.length} links from ${allCategories.size} categories`);
       return true;
+      
     } catch (err) {
       console.error("Failed to load links:", err);
       document.getElementById("links-container").innerHTML = `
@@ -600,14 +627,21 @@
   }
 
   function getDomain(url) {
-    try { return new URL(url).hostname; } catch { return url; }
+    try { 
+      const hostname = new URL(url).hostname;
+      return hostname.replace(/^www\./, '');
+    } catch { 
+      return url; 
+    }
   }
 
   function getFaviconUrl(url) {
     try {
       const hostname = new URL(url).hostname;
       return `https://icons.duckduckgo.com/ip3/${hostname}.ico`;
-    } catch { return ''; }
+    } catch { 
+      return ''; 
+    }
   }
 
   function filterLinks() {
@@ -628,9 +662,21 @@
 
   function groupLinks(filtered) {
     const map = {};
-    filtered.forEach(l => { map[l.category] = map[l.category] || []; map[l.category].push(l); });
-    const cats = [...new Set([...CATEGORY_ORDER, ...Object.keys(map)])].filter(c => map[c]);
-    return cats.map(c => ({ category: c, links: map[c] }));
+    filtered.forEach(l => {
+      if (!map[l.category]) map[l.category] = [];
+      map[l.category].push(l);
+    });
+    
+    // Sort categories alphabetically, but put Proxies and Games first
+    const sortedCats = Object.keys(map).sort((a, b) => {
+      if (a === "Proxies") return -1;
+      if (b === "Proxies") return 1;
+      if (a === "Games") return -1;
+      if (b === "Games") return 1;
+      return a.localeCompare(b);
+    });
+    
+    return sortedCats.map(cat => ({ category: cat, links: map[cat] }));
   }
 
   function createCard(link, idx) {
@@ -642,11 +688,11 @@
     a.target = "_blank";
     a.rel = "noopener noreferrer";
     a.className = "link-card";
-    a.style.animationDelay = `${idx * 0.02}s`;
+    a.style.animationDelay = `${idx * 0.01}s`;
     a.innerHTML = `
       <div class="favicon-wrap">
         <img src="${faviconSrc}" alt="" width="28" height="28" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
-        <div class="favicon-letter" style="display:none;">${initial}</div>
+        <div class="favicon-letter" style="display:none;">${escapeHtml(initial)}</div>
       </div>
       <div class="card-text">
         <div class="name">${escapeHtml(link.label)}</div>
@@ -654,12 +700,15 @@
       </div>
       <i class="fas fa-external-link-alt ext-icon"></i>
     `;
-    const letterDiv = a.querySelector('.favicon-letter');
+    
+    // Handle case where image fails to load
     const img = a.querySelector('img');
+    const letterDiv = a.querySelector('.favicon-letter');
     if (img.complete && img.naturalWidth === 0) {
       img.style.display = 'none';
       if (letterDiv) letterDiv.style.display = 'flex';
     }
+    
     return a;
   }
 
@@ -676,25 +725,33 @@
     const filtered = filterLinks();
     const grouped = groupLinks(filtered);
     const container = document.getElementById("links-container");
-    document.getElementById("link-count").innerHTML = `<i class="fas fa-link"></i> ${links.length} curated resources · by Viros`;
-    document.getElementById("footer-text").innerHTML = `Viros Prox · ${filtered.length} of ${links.length} active links`;
+    
+    // Update stats
+    document.getElementById("link-count").innerHTML = `<i class="fas fa-link"></i> ${links.length} resources · ${allCategories.size} categories`;
+    document.getElementById("footer-text").innerHTML = `Viros Prox · ${filtered.length} of ${links.length} links shown`;
     document.getElementById("clear-btn").classList.toggle("visible", searchQuery.length > 0);
 
     container.innerHTML = "";
+    
     if (grouped.length === 0) {
-      container.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><p>No matching links found</p><p style="font-size:0.7rem;">try different search or category</p></div>`;
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-search"></i>
+          <p>No matching links found</p>
+          <p style="font-size:0.7rem;">try a different search term or category</p>
+        </div>`;
       return;
     }
 
     grouped.forEach(group => {
       const section = document.createElement("div");
       section.className = "category";
-      const iconClass = CATEGORY_ICONS[group.category] || "fa-folder";
+      const iconClass = CATEGORY_ICONS[group.category] || CATEGORY_ICONS.Other;
       section.innerHTML = `
         <div class="cat-header">
           <div class="cat-label">
             <i class="fas ${iconClass}"></i>
-            <span>${group.category}</span>
+            <span>${escapeHtml(group.category)}</span>
           </div>
           <div class="cat-count">${group.links.length}</div>
           <div class="cat-line"></div>
@@ -706,7 +763,7 @@
       container.appendChild(section);
     });
 
-    // Glow toggle effect
+    // Reapply glow toggle effect if disabled
     if (!document.getElementById('toggleGlow').checked) {
       document.querySelectorAll('.link-card').forEach(card => {
         card.style.transition = 'none';
@@ -716,7 +773,15 @@
 
   function initPills() {
     const el = document.getElementById("pills");
-    ["All", ...CATEGORY_ORDER].forEach(cat => {
+    const categories = ["All", ...Array.from(allCategories).sort((a, b) => {
+      if (a === "Proxies") return -1;
+      if (b === "Proxies") return 1;
+      if (a === "Games") return -1;
+      if (b === "Games") return 1;
+      return a.localeCompare(b);
+    })];
+    
+    categories.forEach(cat => {
       const btn = document.createElement("button");
       btn.className = `pill${cat === "All" ? " active" : ""}`;
       btn.textContent = cat;
@@ -743,7 +808,9 @@
     searchInput.focus();
   });
 
-  // Particle effect (from the style you sent)
+  // ========================
+  // PARTICLE EFFECT (from the style you wanted)
+  // ========================
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
   let particlesArray = [];
@@ -772,7 +839,7 @@
     }
   }
 
-  function initParticles(num = 100) {
+  function initParticles(num = 80) {
     particlesArray = [];
     for (let i = 0; i < num; i++) particlesArray.push(new Particle());
   }
@@ -785,7 +852,7 @@
         const dy = particlesArray[a].y - particlesArray[b].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 100) {
-          ctx.strokeStyle = 'rgba(180,122,255,0.12)';
+          ctx.strokeStyle = 'rgba(180,122,255,0.1)';
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -823,18 +890,13 @@
     cards.forEach(c => c.style.transition = e.target.checked ? 'all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1)' : 'none');
   });
 
-  // Boot
+  // Boot the app
   (async function boot() {
     const success = await fetchLinks();
-    if (!success || links.length === 0) return;
-    const seen = {};
-    CATEGORY_ORDER.forEach(c => seen[c] = true);
-    links.forEach(l => {
-      if (!seen[l.category]) {
-        CATEGORY_ORDER.push(l.category);
-        seen[l.category] = true;
-      }
-    });
+    if (!success || links.length === 0) {
+      console.warn("No links loaded");
+      return;
+    }
     initPills();
     render();
   })();
