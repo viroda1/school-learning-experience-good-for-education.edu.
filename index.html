@@ -1,905 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Viros Prox Loader • Student Resource Hub</title>
-  <meta name="description" content="Viros Prox Loader — curated proxies, games, and educational resources. Fast, filterable, and sleek." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viros Prox Loader • Student Resource Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:#0b0a0f;color:#f2eaff;min-height:100vh;overflow-x:hidden;position:relative}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.container{max-width:1200px;margin:0 auto;padding:2rem 1rem;position:relative;z-index:2}
+.logo-row{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.logo-icon{font-size:3rem;background:linear-gradient(145deg,#d4c0ff,#9f5eff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{text-align:center;font-size:3rem;background:linear-gradient(145deg,#d4c0ff,#9f5eff);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.sub{text-align:center;color:#bcb0da;margin-top:8px;font-size:0.85rem;letter-spacing:0.3px}
+.link-count-badge{display:inline-block;background:rgba(180,122,255,0.15);border-radius:40px;padding:4px 12px;font-size:0.7rem;color:#c4aaff;margin:12px auto;display:block;text-align:center}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(270deg, #0b0a0f, #1c0f2c, #0b0a0f);
-      background-size: 600% 600%;
-      animation: gradientBG 20s ease infinite;
-      color: #f2eaff;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
+.search-wrap{max-width:500px;margin:32px auto 24px;position:relative}
+.search-box{display:flex;align-items:center;background:rgba(20,16,32,0.7);backdrop-filter:blur(8px);border:1px solid #3b2a55;border-radius:60px;padding:4px 8px 4px 20px;transition:all 0.3s ease}
+.search-box:focus-within{border-color:#b47aff;box-shadow:0 0 20px rgba(180,122,255,0.2)}
+.search-box i{color:#9f5eff;font-size:1rem}
+.search-box input{flex:1;background:transparent;border:none;padding:14px 12px;color:#f2eaff;font-size:0.9rem;outline:none}
+.search-box input::placeholder{color:#6a5a8a}
+.clear-btn{background:rgba(255,255,255,0.08);border:none;color:#bcb0da;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.2rem;transition:0.2s;opacity:0;pointer-events:none}
+.clear-btn.visible{opacity:1;pointer-events:auto}
+.clear-btn:hover{background:#9f5eff;color:white}
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:40px}
+.pill{padding:8px 22px;border-radius:40px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.25s ease;color:#bcb0da;background:rgba(20,16,32,0.6);border:1px solid #3b2a55;letter-spacing:0.3px}
+.pill:hover{color:#f2eaff;border-color:#b47aff;transform:translateY(-2px)}
+.pill.active{background:#9f5eff;color:#fff;border-color:#9f5eff;box-shadow:0 4px 15px rgba(159,94,255,0.3)}
 
-    /* Particle Canvas */
-    #particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-    }
+.category{margin-bottom:48px;opacity:0;animation:fadeIn 0.6s forwards}
+@keyframes fadeIn{to{opacity:1}}
 
-    .main {
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-      position: relative;
-      z-index: 2;
-    }
+.cat-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid rgba(180,122,255,0.2)}
+.cat-label{display:flex;align-items:center;gap:10px;background:rgba(180,122,255,0.1);padding:6px 16px;border-radius:40px;border:1px solid rgba(180,122,255,0.2)}
+.cat-label i{color:#9f5eff;font-size:0.85rem}
+.cat-label span{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.cat-count{background:rgba(20,16,32,0.8);padding:3px 10px;border-radius:30px;font-size:0.7rem;font-weight:600;color:#c4aaff}
+.cat-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(180,122,255,0.3),transparent)}
 
-    /* Header */
-    .logo-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.link-card{background:#141020;border-radius:20px;padding:16px 18px;text-decoration:none;color:#f2eaff;border:1px solid #3b2a55;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;backdrop-filter:blur(2px);transition:all 0.3s cubic-bezier(0.2,0.9,0.4,1.1)}
+.link-card:hover{transform:translateY(-6px) scale(1.02);border-color:#b47aff;box-shadow:0 12px 28px rgba(180,122,255,0.25)}
+.link-card::before{content:'';position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(120deg,rgba(255,255,255,0.08),rgba(180,122,255,0.12),rgba(255,255,255,0.08));transform:skewX(-25deg);transition:0.6s}
+.link-card:hover::before{left:125%}
 
-    .logo-icon {
-      font-size: 3rem;
-      background: linear-gradient(145deg, #d4c0ff, #9f5eff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
+.favicon-wrap{width:48px;height:48px;background:rgba(255,255,255,0.05);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(180,122,255,0.2);transition:0.3s}
+.link-card:hover .favicon-wrap{transform:scale(1.08) rotate(3deg);border-color:#9f5eff}
+.favicon-wrap img{width:28px;height:28px;border-radius:8px}
+.favicon-letter{font-size:22px;font-weight:800;background:linear-gradient(135deg,#d4c0ff,#9f5eff);-webkit-background-clip:text;background-clip:text;color:transparent;display:flex;align-items:center;justify-content:center;width:28px;height:28px}
 
-    h1 {
-      text-align: center;
-      font-size: 2.8rem;
-      background: linear-gradient(145deg, #d4c0ff, #9f5eff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
+.card-text{flex:1;min-width:0}
+.card-text .name{font-weight:600;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-text .domain{font-size:0.7rem;color:#8a7aae;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ext-icon{color:#6a5a8a;font-size:0.85rem;transition:0.3s;flex-shrink:0}
+.link-card:hover .ext-icon{color:#9f5eff;transform:translate(3px,-3px)}
 
-    @media (min-width: 640px) {
-      h1 { font-size: 3.5rem; }
-    }
+.empty-state{text-align:center;padding:60px 20px;background:rgba(20,16,32,0.5);border-radius:30px;border:1px dashed #3b2a55}
+.empty-state i{font-size:3rem;color:#6a5a8a;margin-bottom:16px}
+.empty-state p{color:#bcb0da}
 
-    .sub {
-      text-align: center;
-      color: #bcb0da;
-      margin-top: 8px;
-      font-size: 0.85rem;
-      letter-spacing: 0.3px;
-    }
+.footer{margin-top:60px;text-align:center}
+.footer-inner{display:inline-flex;align-items:center;gap:12px;background:rgba(20,16,32,0.6);backdrop-filter:blur(8px);padding:10px 24px;border-radius:60px;border:1px solid #3b2a55}
+.footer-dot{width:8px;height:8px;background:#9f5eff;border-radius:50%;position:relative}
+.footer-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid #9f5eff;animation:pulse-ring 2s infinite}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.2);opacity:0}}
 
-    .link-count-badge {
-      display: inline-block;
-      background: rgba(180, 122, 255, 0.15);
-      border-radius: 40px;
-      padding: 4px 12px;
-      font-size: 0.7rem;
-      color: #c4aaff;
-      margin-top: 12px;
-    }
+.footer-inner p{font-size:0.7rem;color:#bcb0da}
 
-    /* Search Bar */
-    .search-wrap {
-      max-width: 500px;
-      margin: 32px auto 24px;
-      position: relative;
-    }
+#settingsBtn{position:fixed;bottom:20px;right:20px;background:#9f5eff;color:white;border:none;padding:12px 16px;border-radius:50px;cursor:pointer;z-index:10;font-size:1.2rem;box-shadow:0 4px 15px rgba(159,94,255,0.4);transition:0.2s}
+#settingsBtn:hover{transform:scale(1.05);background:#b47aff}
 
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: rgba(20, 16, 32, 0.7);
-      backdrop-filter: blur(8px);
-      border: 1px solid #3b2a55;
-      border-radius: 60px;
-      padding: 4px 8px 4px 20px;
-      transition: all 0.3s ease;
-    }
-
-    .search-box:focus-within {
-      border-color: #b47aff;
-      box-shadow: 0 0 20px rgba(180, 122, 255, 0.2);
-    }
-
-    .search-box i {
-      color: #9f5eff;
-      font-size: 1rem;
-    }
-
-    .search-box input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      padding: 14px 12px;
-      color: #f2eaff;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .search-box input::placeholder {
-      color: #6a5a8a;
-    }
-
-    .clear-btn {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #bcb0da;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
-      transition: 0.2s;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .clear-btn.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .clear-btn:hover {
-      background: #9f5eff;
-      color: white;
-    }
-
-    /* Category Pills */
-    .pills {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 40px;
-    }
-
-    .pill {
-      background: rgba(20, 16, 32, 0.6);
-      backdrop-filter: blur(4px);
-      border: 1px solid #3b2a55;
-      padding: 8px 22px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #bcb0da;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      letter-spacing: 0.3px;
-    }
-
-    .pill:hover {
-      border-color: #b47aff;
-      color: #f2eaff;
-      transform: translateY(-2px);
-    }
-
-    .pill.active {
-      background: #9f5eff;
-      border-color: #9f5eff;
-      color: white;
-      box-shadow: 0 4px 15px rgba(159, 94, 255, 0.3);
-    }
-
-    /* Category Sections */
-    .category {
-      margin-bottom: 48px;
-    }
-
-    .cat-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(180, 122, 255, 0.2);
-    }
-
-    .cat-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(180, 122, 255, 0.1);
-      padding: 6px 16px;
-      border-radius: 40px;
-      border: 1px solid rgba(180, 122, 255, 0.2);
-    }
-
-    .cat-label i {
-      color: #9f5eff;
-      font-size: 0.85rem;
-    }
-
-    .cat-label span {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .cat-count {
-      background: rgba(20, 16, 32, 0.8);
-      padding: 3px 10px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #c4aaff;
-    }
-
-    .cat-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(180, 122, 255, 0.3), transparent);
-    }
-
-    /* Cards Grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 18px;
-    }
-
-    .link-card {
-      background: #141020;
-      border-radius: 20px;
-      padding: 16px 18px;
-      text-decoration: none;
-      color: #f2eaff;
-      border: 1px solid #3b2a55;
-      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(2px);
-    }
-
-    .link-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(120deg, rgba(255,255,255,0.08), rgba(180,122,255,0.12), rgba(255,255,255,0.08));
-      transform: skewX(-25deg);
-      transition: 0.6s;
-    }
-
-    .link-card:hover::before {
-      left: 125%;
-    }
-
-    .link-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      border-color: #b47aff;
-      box-shadow: 0 12px 28px rgba(180, 122, 255, 0.25);
-    }
-
-    .favicon-wrap {
-      width: 48px;
-      height: 48px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: 0.3s;
-      border: 1px solid rgba(180, 122, 255, 0.2);
-    }
-
-    .link-card:hover .favicon-wrap {
-      transform: scale(1.08) rotate(3deg);
-      border-color: #9f5eff;
-    }
-
-    .favicon-wrap img {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-    }
-
-    .favicon-letter {
-      font-size: 22px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #d4c0ff, #9f5eff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .card-text {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-text .name {
-      font-weight: 600;
-      font-size: 0.95rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-text .domain {
-      font-size: 0.7rem;
-      color: #8a7aae;
-      margin-top: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ext-icon {
-      color: #6a5a8a;
-      font-size: 0.85rem;
-      transition: 0.3s;
-      flex-shrink: 0;
-    }
-
-    .link-card:hover .ext-icon {
-      color: #9f5eff;
-      transform: translate(3px, -3px);
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      background: rgba(20, 16, 32, 0.5);
-      border-radius: 30px;
-      border: 1px dashed #3b2a55;
-    }
-
-    .empty-state i {
-      font-size: 3rem;
-      color: #6a5a8a;
-      margin-bottom: 16px;
-    }
-
-    .empty-state p {
-      color: #bcb0da;
-    }
-
-    /* Skeleton Loading */
-    .skeleton-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 18px;
-    }
-
-    .skeleton-card {
-      background: rgba(20, 16, 32, 0.6);
-      border-radius: 20px;
-      height: 76px;
-      border: 1px solid #3b2a55;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
-    }
-
-    /* Footer */
-    .footer {
-      margin-top: 60px;
-      text-align: center;
-    }
-
-    .footer-inner {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(20, 16, 32, 0.6);
-      backdrop-filter: blur(8px);
-      padding: 10px 24px;
-      border-radius: 60px;
-      border: 1px solid #3b2a55;
-    }
-
-    .footer-dot {
-      width: 8px;
-      height: 8px;
-      background: #9f5eff;
-      border-radius: 50%;
-      position: relative;
-    }
-
-    .footer-dot::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px solid #9f5eff;
-      animation: pulse-ring 2s infinite;
-    }
-
-    @keyframes pulse-ring {
-      0% { transform: scale(1); opacity: 0.6; }
-      100% { transform: scale(2.2); opacity: 0; }
-    }
-
-    .footer-inner p {
-      font-size: 0.7rem;
-      color: #bcb0da;
-    }
-
-    /* Settings Button */
-    #settingsBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #9f5eff;
-      color: white;
-      border: none;
-      padding: 12px 16px;
-      border-radius: 50px;
-      cursor: pointer;
-      z-index: 10;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 15px rgba(159, 94, 255, 0.4);
-      transition: 0.2s;
-    }
-
-    #settingsBtn:hover {
-      transform: scale(1.05);
-      background: #b47aff;
-    }
-
-    #settingsPanel {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      background: rgba(20, 16, 32, 0.95);
-      backdrop-filter: blur(12px);
-      border: 1px solid #3b2a55;
-      border-radius: 20px;
-      padding: 16px 20px;
-      display: none;
-      z-index: 10;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    #settingsPanel label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.8rem;
-      color: #bcb0da;
-      cursor: pointer;
-    }
-
-    #settingsPanel input {
-      accent-color: #9f5eff;
-    }
-  </style>
+#settingsPanel{position:fixed;bottom:80px;right:20px;background:rgba(20,16,32,0.95);backdrop-filter:blur(12px);border:1px solid #3b2a55;border-radius:20px;padding:16px 20px;display:none;z-index:10;flex-direction:column;gap:12px}
+#settingsPanel label{display:flex;align-items:center;gap:10px;font-size:0.8rem;color:#bcb0da;cursor:pointer}
+#settingsPanel input{accent-color:#9f5eff}
+</style>
 </head>
 <body>
-
 <canvas id="particles"></canvas>
+<div class="container">
+<div class="logo-row"><i class="fas fa-bolt logo-icon"></i><h1>VIROS PROX LOADER</h1></div>
+<div class="sub"><i class="fas fa-shield-alt"></i> curated proxies · games · tools · resources</div>
+<div class="link-count-badge" id="link-count"><i class="fas fa-database"></i> loading links...</div>
 
-<div class="main">
-  <div class="logo-row">
-    <i class="fas fa-bolt logo-icon"></i>
-    <h1>VIROS PROX LOADER</h1>
-  </div>
-  <div class="sub">
-    <i class="fas fa-shield-alt"></i> curated proxies · games · tools · resources
-  </div>
-  <div class="link-count-badge" id="link-count">
-    <i class="fas fa-database"></i> loading links...
-  </div>
+<div class="search-wrap">
+<div class="search-box"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Search links, categories..." autocomplete="off"><button class="clear-btn" id="clear-btn">✕</button></div>
+</div>
 
-  <!-- Search -->
-  <div class="search-wrap" id="search-wrap">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" id="search-input" placeholder="Search links, categories..." autocomplete="off" />
-      <button class="clear-btn" id="clear-btn" aria-label="Clear">✕</button>
-    </div>
-  </div>
+<div class="pills" id="pills"></div>
+<div id="links-container">
+<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading links...</p></div>
+</div>
 
-  <!-- Category Pills -->
-  <div class="pills" id="pills"></div>
-
-  <!-- Links Container -->
-  <div id="links-container">
-    <div class="skeleton-grid">
-      <div class="skeleton-card"></div><div class="skeleton-card"></div>
-      <div class="skeleton-card"></div><div class="skeleton-card"></div>
-      <div class="skeleton-card"></div><div class="skeleton-card"></div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-inner">
-      <div class="footer-dot"></div>
-      <p id="footer-text">Viros Prox · loading resources</p>
-    </div>
-  </div>
+<div class="footer">
+<div class="footer-inner">
+<div class="footer-dot"></div>
+<p id="footer-text">Viros Prox · loading resources</p>
+</div>
+</div>
 </div>
 
 <button id="settingsBtn"><i class="fas fa-sliders-h"></i></button>
 <div id="settingsPanel">
-  <label><input type="checkbox" id="toggleParticles" checked> <i class="fas fa-star-of-life"></i> Particle Network</label>
-  <label><input type="checkbox" id="toggleGlow" checked> <i class="fas fa-magic"></i> Card Glow Effect</label>
+<label><input type="checkbox" id="toggleParticles" checked> <i class="fas fa-star-of-life"></i> Particle Network</label>
+<label><input type="checkbox" id="toggleGlow" checked> <i class="fas fa-magic"></i> Card Glow Effect</label>
 </div>
 
 <script>
-  // ========================
-  // VIROS PROX LOADER
-  // Fetches from the new listofproxys file
-  // ========================
-  const LINKS_URL = "https://raw.githubusercontent.com/viroda1/school-learning-experience-good-for-education.edu./refs/heads/main/listofproxys";
-  let links = [];
-  let activeCategory = "All";
-  let searchQuery = "";
-  let allCategories = new Set();
-  
-  // Icon mapping for different categories
-  const CATEGORY_ICONS = {
-    Proxies: "fa-globe",
-    Games: "fa-gamepad",
-    Education: "fa-graduation-cap",
-    Other: "fa-link"
-  };
+const LINKS_URL="https://raw.githubusercontent.com/viroda1/school-learning-experience-good-for-education.edu./refs/heads/main/listofproxys";
+let links=[],activeCategory="All",searchQuery="",allCategories=new Set();
+const CATEGORY_ICONS={Proxies:"fa-globe",Games:"fa-gamepad",Education:"fa-graduation-cap",Other:"fa-link"};
 
-  // Fetch and parse links from the text file
-  async function fetchLinks() {
-    try {
-      const res = await fetch(LINKS_URL + "?v=" + Date.now());
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      
-      const lines = text.split("\n");
-      const parsedLinks = [];
-      
-      for (let line of lines) {
-        line = line.trim();
-        
-        // Skip empty lines, comments, and decorative headers
-        if (!line || line.startsWith("#") || line.startsWith("──") || line.startsWith("//")) {
-          continue;
-        }
-        
-        // Parse format: Title | URL | Category
-        const parts = line.split("|").map(s => s.trim());
-        
-        // Need at least 3 parts for a valid entry
-        if (parts.length >= 3) {
-          const label = parts[0];
-          const url = parts[1];
-          let category = parts[2];
-          
-          // Clean up category (remove any trailing decorative chars)
-          category = category.replace(/^─+$/, '').trim();
-          if (category) {
-            parsedLinks.push({ label, url, category });
-            allCategories.add(category);
-          }
-        }
-      }
-      
-      links = parsedLinks;
-      console.log(`Loaded ${links.length} links from ${allCategories.size} categories`);
-      return true;
-      
-    } catch (err) {
-      console.error("Failed to load links:", err);
-      document.getElementById("links-container").innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-exclamation-triangle"></i>
-          <p>Could not load links from GitHub</p>
-          <p style="font-size:0.75rem; margin-top:8px;">Check raw URL or connection</p>
-        </div>`;
-      document.getElementById("link-count").innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to load';
-      document.getElementById("footer-text").textContent = "Viros Prox · Error loading";
-      return false;
-    }
-  }
+async function fetchLinks(){
+try{
+const res=await fetch(LINKS_URL+"?v="+Date.now());
+if(!res.ok)throw new Error(`HTTP ${res.status}`);
+const text=await res.text();
+const parsed=[];
+text.split("\n").forEach(line=>{
+line=line.trim();
+if(!line||line.startsWith("#")||line.startsWith("//"))return;
+const parts=line.split("|").map(s=>s.trim());
+if(parts.length>=3){
+let [label,url,category]=parts;
+category=category.replace(/^─+$/,'').trim();
+if(category){parsed.push({label,url,category});allCategories.add(category);}
+}
+});
+links=parsed;
+return true;
+}catch(err){
+console.error(err);
+document.getElementById("links-container").innerHTML='<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load links</p></div>';
+document.getElementById("link-count").innerHTML='<i class="fas fa-exclamation-circle"></i> Failed';
+document.getElementById("footer-text").textContent="Viros Prox · Error loading";
+return false;
+}
+}
 
-  function getDomain(url) {
-    try { 
-      const hostname = new URL(url).hostname;
-      return hostname.replace(/^www\./, '');
-    } catch { 
-      return url; 
-    }
-  }
+function escapeHtml(str){return str.replace(/[&<>]/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');}
+function getDomain(url){try{return new URL(url).hostname.replace(/^www\./,'')}catch{return url}}
+function getFaviconUrl(url){try{return `https://icons.duckduckgo.com/ip3/${new URL(url).hostname}.ico`}catch{return ''}}
 
-  function getFaviconUrl(url) {
-    try {
-      const hostname = new URL(url).hostname;
-      return `https://icons.duckduckgo.com/ip3/${hostname}.ico`;
-    } catch { 
-      return ''; 
-    }
-  }
+function filterLinks(){
+let f=links;
+if(activeCategory!=="All")f=f.filter(l=>l.category===activeCategory);
+if(searchQuery.trim()){const q=searchQuery.toLowerCase();f=f.filter(l=>l.label.toLowerCase().includes(q)||l.url.toLowerCase().includes(q)||l.category.toLowerCase().includes(q))}
+return f;
+}
 
-  function filterLinks() {
-    let filtered = links;
-    if (activeCategory !== "All") {
-      filtered = filtered.filter(l => l.category === activeCategory);
-    }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      filtered = filtered.filter(l =>
-        l.label.toLowerCase().includes(q) ||
-        l.url.toLowerCase().includes(q) ||
-        l.category.toLowerCase().includes(q)
-      );
-    }
-    return filtered;
-  }
+function groupLinks(filtered){
+const map={};
+filtered.forEach(l=>{if(!map[l.category])map[l.category]=[];map[l.category].push(l)});
+const sorted=Object.keys(map).sort((a,b)=>{if(a==="Proxies")return -1;if(b==="Proxies")return 1;if(a==="Games")return -1;if(b==="Games")return 1;return a.localeCompare(b)});
+return sorted.map(c=>({category:c,links:map[c]}));
+}
 
-  function groupLinks(filtered) {
-    const map = {};
-    filtered.forEach(l => {
-      if (!map[l.category]) map[l.category] = [];
-      map[l.category].push(l);
-    });
-    
-    // Sort categories alphabetically, but put Proxies and Games first
-    const sortedCats = Object.keys(map).sort((a, b) => {
-      if (a === "Proxies") return -1;
-      if (b === "Proxies") return 1;
-      if (a === "Games") return -1;
-      if (b === "Games") return 1;
-      return a.localeCompare(b);
-    });
-    
-    return sortedCats.map(cat => ({ category: cat, links: map[cat] }));
-  }
+function createCard(link,idx){
+const domain=getDomain(link.url),initial=link.label.charAt(0).toUpperCase(),favicon=getFaviconUrl(link.url);
+const a=document.createElement("a");a.href=link.url;a.target="_blank";a.rel="noopener noreferrer";a.className="link-card";a.style.animationDelay=`${idx*0.01}s`;
+a.innerHTML=`<div class="favicon-wrap"><img src="${favicon}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="favicon-letter" style="display:none">${escapeHtml(initial)}</div></div><div class="card-text"><div class="name">${escapeHtml(link.label)}</div><div class="domain">${escapeHtml(domain)}</div></div><i class="fas fa-external-link-alt ext-icon"></i>`;
+return a;
+}
 
-  function createCard(link, idx) {
-    const domain = getDomain(link.url);
-    const initial = link.label.charAt(0).toUpperCase();
-    const faviconSrc = getFaviconUrl(link.url);
-    const a = document.createElement("a");
-    a.href = link.url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.className = "link-card";
-    a.style.animationDelay = `${idx * 0.01}s`;
-    a.innerHTML = `
-      <div class="favicon-wrap">
-        <img src="${faviconSrc}" alt="" width="28" height="28" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
-        <div class="favicon-letter" style="display:none;">${escapeHtml(initial)}</div>
-      </div>
-      <div class="card-text">
-        <div class="name">${escapeHtml(link.label)}</div>
-        <div class="domain">${escapeHtml(domain)}</div>
-      </div>
-      <i class="fas fa-external-link-alt ext-icon"></i>
-    `;
-    
-    // Handle case where image fails to load
-    const img = a.querySelector('img');
-    const letterDiv = a.querySelector('.favicon-letter');
-    if (img.complete && img.naturalWidth === 0) {
-      img.style.display = 'none';
-      if (letterDiv) letterDiv.style.display = 'flex';
-    }
-    
-    return a;
-  }
+function render(){
+const f=filterLinks(),grouped=groupLinks(f),container=document.getElementById("links-container");
+document.getElementById("link-count").innerHTML=`<i class="fas fa-link"></i> ${links.length} resources · ${allCategories.size} categories`;
+document.getElementById("footer-text").textContent=`Viros Prox · ${f.length} of ${links.length} links shown`;
+document.getElementById("clear-btn").classList.toggle("visible",searchQuery.length>0);
+container.innerHTML="";
+if(grouped.length===0){container.innerHTML='<div class="empty-state"><i class="fas fa-search"></i><p>No matching links</p></div>';return;}
+grouped.forEach(g=>{
+const section=document.createElement("div");section.className="category";
+const iconClass=CATEGORY_ICONS[g.category]||CATEGORY_ICONS.Other;
+section.innerHTML=`<div class="cat-header"><div class="cat-label"><i class="fas ${iconClass}"></i><span>${escapeHtml(g.category)}</span></div><div class="cat-count">${g.links.length}</div><div class="cat-line"></div></div>`;
+const grid=document.createElement("div");grid.className="cards-grid";g.links.forEach((l,i)=>grid.appendChild(createCard(l,i)));section.appendChild(grid);
+container.appendChild(section);
+});
+if(!document.getElementById("toggleGlow").checked){document.querySelectorAll(".link-card").forEach(c=>c.style.transition="none")}
+}
 
-  function escapeHtml(str) {
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
+function initPills(){
+const el=document.getElementById("pills");
+const cats=["All",...Array.from(allCategories).sort((a,b)=>{if(a==="Proxies")return -1;if(b==="Proxies")return 1;if(a==="Games")return -1;if(b==="Games")return 1;return a.localeCompare(b)})];
+cats.forEach(cat=>{const btn=document.createElement("button");btn.className=`pill${cat==="All"?" active":""}`;btn.textContent=cat;btn.addEventListener("click",()=>{activeCategory=cat;document.querySelectorAll(".pill").forEach(p=>p.classList.remove("active"));btn.classList.add("active");render()});el.appendChild(btn)});
+}
 
-  function render() {
-    const filtered = filterLinks();
-    const grouped = groupLinks(filtered);
-    const container = document.getElementById("links-container");
-    
-    // Update stats
-    document.getElementById("link-count").innerHTML = `<i class="fas fa-link"></i> ${links.length} resources · ${allCategories.size} categories`;
-    document.getElementById("footer-text").innerHTML = `Viros Prox · ${filtered.length} of ${links.length} links shown`;
-    document.getElementById("clear-btn").classList.toggle("visible", searchQuery.length > 0);
+document.getElementById("search-input").addEventListener("input",e=>{searchQuery=e.target.value;render()});
+document.getElementById("clear-btn").addEventListener("click",()=>{searchQuery="";document.getElementById("search-input").value="";render();document.getElementById("search-input").focus()});
 
-    container.innerHTML = "";
-    
-    if (grouped.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-search"></i>
-          <p>No matching links found</p>
-          <p style="font-size:0.7rem;">try a different search term or category</p>
-        </div>`;
-      return;
-    }
+const canvas=document.getElementById("particles"),ctx=canvas.getContext("2d");
+let w=canvas.width=window.innerWidth,h=canvas.height=window.innerHeight,particlesArray=[];
+class Particle{constructor(){this.x=Math.random()*w;this.y=Math.random()*h;this.size=Math.random()*3+1;this.speedX=(Math.random()-0.5)*0.8;this.speedY=(Math.random()-0.5)*0*0.8;this.color='rgba(159,94,255,0.6)'}update(){this.x+=this.speedX;this.y+=this.speedY;if(this.x<0||this.x>w)this.speedX*=-1;if(this.y<0||this.y>h)this.speedY*=-1}draw(){ctx.fillStyle=this.color;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill()}} 
 
-    grouped.forEach(group => {
-      const section = document.createElement("div");
-      section.className = "category";
-      const iconClass = CATEGORY_ICONS[group.category] || CATEGORY_ICONS.Other;
-      section.innerHTML = `
-        <div class="cat-header">
-          <div class="cat-label">
-            <i class="fas ${iconClass}"></i>
-            <span>${escapeHtml(group.category)}</span>
-          </div>
-          <div class="cat-count">${group.links.length}</div>
-          <div class="cat-line"></div>
-        </div>`;
-      const grid = document.createElement("div");
-      grid.className = "cards-grid";
-      group.links.forEach((link, idx) => grid.appendChild(createCard(link, idx)));
-      section.appendChild(grid);
-      container.appendChild(section);
-    });
+function initParticles(){particlesArray=[];for(let i=0;i<120;i++)particlesArray.push(new Particle())} 
+function animateParticles(){ctx.clearRect(0,0,w,h);if(!document.getElementById("toggleParticles").checked)return;particlesArray.forEach(p=>{p.update();p.draw()});connectParticles();requestAnimationFrame(animateParticles)} 
+function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a+1;b<particlesArray.length;b++){let dx=particlesArray[a].x-particlesArray[b].x,dy=particlesArray[a].y-particlesArray[b].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.strokeStyle='rgba(159,94,255,'+(1-d/100)*0.3+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke()}}}} 
 
-    // Reapply glow toggle effect if disabled
-    if (!document.getElementById('toggleGlow').checked) {
-      document.querySelectorAll('.link-card').forEach(card => {
-        card.style.transition = 'none';
-      });
-    }
-  }
+window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;initParticles()}); 
 
-  function initPills() {
-    const el = document.getElementById("pills");
-    const categories = ["All", ...Array.from(allCategories).sort((a, b) => {
-      if (a === "Proxies") return -1;
-      if (b === "Proxies") return 1;
-      if (a === "Games") return -1;
-      if (b === "Games") return 1;
-      return a.localeCompare(b);
-    })];
-    
-    categories.forEach(cat => {
-      const btn = document.createElement("button");
-      btn.className = `pill${cat === "All" ? " active" : ""}`;
-      btn.textContent = cat;
-      btn.addEventListener("click", () => {
-        activeCategory = cat;
-        document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        render();
-      });
-      el.appendChild(btn);
-    });
-  }
+document.getElementById("settingsBtn").addEventListener("click",()=>{const panel=document.getElementById("settingsPanel");panel.style.display=panel.style.display==="flex"?"none":"flex"}); 
+document.getElementById("toggleGlow").addEventListener("change",()=>{render()}); 
 
-  // Event listeners
-  const searchInput = document.getElementById("search-input");
-  const searchWrap = document.getElementById("search-wrap");
-  searchInput.addEventListener("input", e => { searchQuery = e.target.value; render(); });
-  searchInput.addEventListener("focus", () => searchWrap.classList.add("focused"));
-  searchInput.addEventListener("blur", () => searchWrap.classList.remove("focused"));
-  document.getElementById("clear-btn").addEventListener("click", () => {
-    searchQuery = "";
-    searchInput.value = "";
-    render();
-    searchInput.focus();
-  });
-
-  // ========================
-  // PARTICLE EFFECT (from the style you wanted)
-  // ========================
-  const canvas = document.getElementById('particles');
-  const ctx = canvas.getContext('2d');
-  let particlesArray = [];
-  let w = canvas.width = window.innerWidth;
-  let h = canvas.height = window.innerHeight;
-
-  class Particle {
-    constructor() {
-      this.x = Math.random() * w;
-      this.y = Math.random() * h;
-      this.size = Math.random() * 3 + 1;
-      this.speedX = (Math.random() - 0.5) * 0.8;
-      this.speedY = (Math.random() - 0.5) * 0.8;
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if (this.x < 0 || this.x > w) this.speedX *= -1;
-      if (this.y < 0 || this.y > h) this.speedY *= -1;
-    }
-    draw() {
-      ctx.fillStyle = 'rgba(180,122,255,0.6)';
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function initParticles(num = 80) {
-    particlesArray = [];
-    for (let i = 0; i < num; i++) particlesArray.push(new Particle());
-  }
-  initParticles();
-
-  function connectParticles() {
-    for (let a = 0; a < particlesArray.length; a++) {
-      for (let b = a; b < particlesArray.length; b++) {
-        const dx = particlesArray[a].x - particlesArray[b].x;
-        const dy = particlesArray[a].y - particlesArray[b].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 100) {
-          ctx.strokeStyle = 'rgba(180,122,255,0.1)';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  function animateParticles() {
-    ctx.clearRect(0, 0, w, h);
-    if (document.getElementById('toggleParticles').checked) {
-      particlesArray.forEach(p => { p.update(); p.draw(); });
-      connectParticles();
-    }
-    requestAnimationFrame(animateParticles);
-  }
-  animateParticles();
-
-  window.addEventListener('resize', () => {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-    initParticles();
-  });
-
-  // Settings panel
-  const settingsBtn = document.getElementById('settingsBtn');
-  const settingsPanel = document.getElementById('settingsPanel');
-  settingsBtn.addEventListener('click', () => {
-    settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
-  });
-  document.getElementById('toggleGlow').addEventListener('change', (e) => {
-    const cards = document.querySelectorAll('.link-card');
-    cards.forEach(c => c.style.transition = e.target.checked ? 'all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1)' : 'none');
-  });
-
-  // Boot the app
-  (async function boot() {
-    const success = await fetchLinks();
-    if (!success || links.length === 0) {
-      console.warn("No links loaded");
-      return;
-    }
-    initPills();
-    render();
-  })();
+(async()=>{const ok=await fetchLinks();if(ok){initPills();render();initParticles();animateParticles()}})();
 </script>
 </body>
 </html>
